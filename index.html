@@ -32,8 +32,41 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 10;
+  overflow: hidden; /* for hearts */
 }
 
+/* Floating hearts upwards with sway behind envelope */
+.envelope-screen .bg-heart {
+  position: absolute;
+  font-size: 20px;
+  opacity: 0.7;
+  z-index: 0; /* behind envelope */
+  animation: float-up linear infinite, sway 4s ease-in-out infinite;
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(110vh) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-300px) rotate(360deg); /* higher float */
+    opacity: 0;
+  }
+}
+
+@keyframes sway {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(20px); }
+  50% { transform: translateX(0); }
+  75% { transform: translateX(-20px); }
+  100% { transform: translateX(0); }
+}
+
+/* ================= ENVELOPE CONTENT ================= */
 .envelope {
   width: 850px;
   height: 850px;  
@@ -42,6 +75,7 @@ body {
   position: relative;
   box-shadow: 0 30px 45px rgba(0,0,0,0.25);
   overflow: hidden;
+  z-index: 1; /* in front of hearts */
 }
 
 .letter {
@@ -52,7 +86,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end; /* OPEN button nasa bottom */
+  justify-content: flex-end; /* OPEN button at bottom */
 }
 
 .letter img.slide {
@@ -261,6 +295,21 @@ setInterval(() => {
   slides[current].style.opacity = 1;
 }, 2000);
 
+// ================= HEART BACKGROUND FOR ENVELOPE =================
+const envelopeScreen = document.getElementById("envelopeScreen");
+
+// Create 60 hearts floating upwards with sway
+for (let i = 0; i < 60; i++) {
+  const bgHeart = document.createElement("div");
+  bgHeart.className = "bg-heart";
+  bgHeart.innerHTML = ["❤️","💖","💘","💕","💗"][Math.floor(Math.random()*5)];
+  bgHeart.style.left = Math.random() * 100 + "vw";
+  bgHeart.style.fontSize = (15 + Math.random() * 25) + "px";
+  bgHeart.style.animationDuration = (8 + Math.random() * 5) + "s";
+  bgHeart.style.animationDelay = Math.random() * 5 + "s";
+  envelopeScreen.appendChild(bgHeart);
+}
+
 // ========== OPEN ENVELOPE ==========
 function openEnvelope() {
   document.getElementById("envelopeScreen").style.display = "none";
@@ -270,7 +319,7 @@ function openEnvelope() {
   for (let i = 0; i < 30; i++) {
     const heart = document.createElement("div");
     heart.className = "falling-heart";
-    heart.innerHTML = ["❤️","💖","💘"][Math.floor(Math.random()*3)];
+    heart.innerHTML = ["❤️","💖","💘","💕","💗"][Math.floor(Math.random()*5)];
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.fontSize = (20 + Math.random() * 20) + "px";
     heart.style.animationDuration = 
@@ -313,4 +362,3 @@ noBtn.addEventListener("mouseenter", () => {
 
 </body>
 </html>
-
